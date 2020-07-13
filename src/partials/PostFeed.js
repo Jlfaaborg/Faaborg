@@ -6,7 +6,15 @@ class PostFeed extends React.Component {
     this.state = {
       posts: props.posts,
     };
-    console.log(props.posts);
+  }
+
+  static getDerivedStateFromProps(nextProps, prevState) {
+    if (prevState.posts !== nextProps.posts) {
+      return {
+        posts: nextProps.posts,
+      };
+    }
+    return null;
   }
 
   preparePosts(posts) {
@@ -14,14 +22,14 @@ class PostFeed extends React.Component {
       return (
         <ul>
           {posts.map((post) => (
-            <li key={post.id}>
+            <li key={post._id}>
               <h1>{post.text}</h1>
-              <h3>Likes : {post.likes}</h3>
+              <h3>Likes : {post.likes.count}</h3>
               <h3>
                 Comments :{" "}
                 {post.comments.map((comment) => (
-                  <div className="Comment">
-                    <h4>{comment.user.displayName} Commented:</h4>
+                  <div className="Comment" key={comment.creationDate}>
+                    <h4>{comment.displayName} Commented:</h4>
                     <h5>{comment.text}</h5>
                   </div>
                 ))}

@@ -1,88 +1,17 @@
 import React from "react";
 import PostFeed from "./partials/PostFeed";
 import TopBar from "./partials/TopBar";
+
+const axios = require("axios");
+
 class FeedPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       allPosts: [],
       user: {
-        id: 1234,
-        displayName: "John Doe",
-        img:
-          "https://cdn.onebauer.media/one/empire-images/reviews_films/5898af57ccd4a51d075e10e6/john-wick-2.jpg?quality=50&width=1800&ratio=16-9&resizeStyle=aspectfill&format=jpg",
-        posts: [
-          {
-            id: 12345,
-            text: "hi",
-            likes: "0",
-            comments: [
-              {
-                user: {
-                  id: 2222,
-                  displayName: "John Doe Comment",
-                  img:
-                    "https://cdn.onebauer.media/one/empire-images/reviews_films/5898af57ccd4a51d075e10e6/john-wick-2.jpg?quality=50&width=1800&ratio=16-9&resizeStyle=aspectfill&format=jpg",
-                },
-                text: "hi",
-              },
-            ],
-            created: new Date("December 17, 2019 03:20:00"),
-          },
-        ],
+        id: props.id,
       },
-      friends: [
-        {
-          id: 5555,
-          displayName: "John Doe2",
-          img:
-            "https://cdn.onebauer.media/one/empire-images/reviews_films/5898af57ccd4a51d075e10e6/john-wick-2.jpg?quality=50&width=1800&ratio=16-9&resizeStyle=aspectfill&format=jpg",
-          posts: [
-            {
-              id: 1234,
-              text: "bye",
-              likes: "0",
-              comments: [
-                {
-                  user: {
-                    id: 2222,
-                    displayName: "John Doe2 Comment",
-                    img:
-                      "https://cdn.onebauer.media/one/empire-images/reviews_films/5898af57ccd4a51d075e10e6/john-wick-2.jpg?quality=50&width=1800&ratio=16-9&resizeStyle=aspectfill&format=jpg",
-                  },
-                  text: "hi",
-                },
-              ],
-              created: new Date("December 20, 2019 03:20:00"),
-            },
-          ],
-        },
-        {
-          id: 4651,
-          displayName: "John Doe3",
-          img:
-            "https://cdn.onebauer.media/one/empire-images/reviews_films/5898af57ccd4a51d075e10e6/john-wick-2.jpg?quality=50&width=1800&ratio=16-9&resizeStyle=aspectfill&format=jpg",
-          posts: [
-            {
-              id: 4561,
-              text: "bye",
-              likes: "0",
-              comments: [
-                {
-                  user: {
-                    id: 2222,
-                    displayName: "John Doe",
-                    img:
-                      "https://cdn.onebauer.media/one/empire-images/reviews_films/5898af57ccd4a51d075e10e6/john-wick-2.jpg?quality=50&width=1800&ratio=16-9&resizeStyle=aspectfill&format=jpg",
-                  },
-                  text: "hi",
-                },
-              ],
-              created: new Date("December 30, 2019 03:20:00"),
-            },
-          ],
-        },
-      ],
     };
   }
 
@@ -99,8 +28,43 @@ class FeedPage extends React.Component {
     this.setState({ allPosts: posts });
   }
 
-  componentWillMount() {
-    this.getposts();
+  componentDidMount() {
+    axios
+      .get("http://localhost:5000/profile", {
+        params: {
+          id: this.state.user.id,
+        },
+      })
+      .then((response) => {
+        if (response.data) {
+          this.setState({
+            user: response.data,
+          });
+        }
+      })
+      .finally(() => {
+        console.log(this.state.user);
+        var friends = this.state.user.friends;
+        var posts = friends.map((friend) => {
+          return friend.posts;
+        });
+        var merge = posts.flat(1);
+        axios
+          .get("http://localhost:5000/friendsPost", {
+            params: {
+              ids: merge,
+            },
+          })
+          .then((response) => {
+            if (response.data) {
+              var posts = this.state.user.posts.concat(response.data);
+              this.setState({
+                allPosts: posts,
+              });
+            }
+          });
+      })
+      .catch((err) => console.error(err));
   }
 
   render() {

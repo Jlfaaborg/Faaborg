@@ -1,33 +1,28 @@
 import React from "react";
 import TopBar from "./partials/TopBar";
 import ProfileInfo from "./partials/ProfileInfo";
+import NewPost from "./partials/NewPost";
 
 class ProfilePage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      user: {
-        id: 1234,
-        displayName: "John Doe",
-        img:
-          "https://cdn.onebauer.media/one/empire-images/reviews_films/5898af57ccd4a51d075e10e6/john-wick-2.jpg?quality=50&width=1800&ratio=16-9&resizeStyle=aspectfill&format=jpg",
-        posts: [
-          {
-            id: "1234",
-            text: "hi",
-            likes: "0",
-            comments: ["hi"],
-            created: new Date("December 31, 2019 03:20:00"),
-          },
-        ],
-      },
-    };
+    this.state = { id: this.props.id };
+    this.rerenderParentCallback = this.rerenderParentCallback.bind(this);
   }
+
+  rerenderParentCallback() {
+    this.forceUpdate();
+  }
+
   render() {
     return (
       <div className="Profile">
         <TopBar />
-        <ProfileInfo />
+        <ProfileInfo id={this.state.id} />
+        <NewPost
+          id={this.state.id}
+          rerenderParentCallback={this.rerenderParentCallback}
+        />
       </div>
     );
   }
