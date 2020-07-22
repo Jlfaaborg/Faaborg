@@ -1,5 +1,7 @@
 import React from "react";
 import TopBar from "./partials/TopBar";
+import Message from "./partials/Message";
+import "./css/messagesPage.scss";
 
 const axios = require("axios");
 
@@ -8,104 +10,68 @@ class MessagesPage extends React.Component {
     super(props);
     this.state = {
       id: props.id,
-      message: [],
+      friendId: "",
+      friends: [],
     };
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  handleChange(event) {
-    event.preventDefault();
-    this.setState({ value: event.target.value });
-  }
-
-  handleSubmit(event) {
-    event.preventDefault();
-    var fromId;
-    var displayName;
-    var id = event.target.id;
-    axios
-      .get("http://localhost:5000/profile", {
-        params: {
-          id: this.state.id,
-        },
-      })
-      .then((response) => {
-        if (response.data) {
-          fromId = response.data._id;
-          displayName = response.data.displayName;
-        }
-      })
-      .then(() => {
-        axios
-          .post("http://localhost:5000/replymessages", {
-            id: id,
-            fromId: fromId,
-            displayName: displayName,
-            text: this.state.value,
-          })
-          .then((response) => {
-            console.log(response);
-          });
-      })
-      .catch((err) => console.error(err));
-  }
-
-  prepareMessages(messages) {
-    if (messages === undefined) return;
-    var i = 0;
-    return (
-      <div>
-        {messages.map((message) => (
-          <div className="Message" key={message._id}>
-            <ul>
-              {message.thread.map((item) => (
-                <li key={i++}>
-                  {item.from}: {item.text}
-                </li>
-              ))}
-            </ul>
-            <form onSubmit={this.handleSubmit} id={message._id}>
-              <label>
-                New Message:
-                <textarea
-                  value={this.state.value}
-                  onChange={this.handleChange}
-                />
-              </label>
-              <input type="submit" value="Post" />
-            </form>
-          </div>
-        ))}
-      </div>
-    );
+    this.handleSelect = this.handleSelect.bind(this);
   }
 
   componentDidMount() {
+    this.getFriends();
+  }
+
+  handleSelect(event) {
+    this.setState({ friendId: event.target.id });
+  }
+
+  getFriends() {
     axios
-      .get("http://localhost:5000/profile", {
+      .get("/friends", {
         params: {
           id: this.state.id,
         },
       })
       .then((response) => {
-        console.log(response.data);
-        if (response.data) {
-          this.setState({
-            messages: response.data.messages,
-          });
-        }
-      })
+        this.setState({ friends: response.data });
+      });
+  }
 
-      .catch((err) => console.error(err));
+  selectFriend() {
+    var friends = this.state.friends;
+    if (friends === undefined) return;
+    friends.sort((a, b) => {
+      return a.displayName.localeCompare(b.displayName);
+    });
+
+    return (
+      <div className="Friends">
+        <h1>Message Friends</h1>
+        <ul>
+          {friends.map((friend) => (
+            <li key={friend._id}>
+              <h1>{friend.displayName}</h1>
+              <button id={friend._id} onClick={this.handleSelect}>
+                Select
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
   }
 
   render() {
     return (
       <div className="MessagesPage">
         <TopBar />
-        {this.prepareMessages(this.state.messages)}
+        {this.state.friendId === "" ? (
+          this.selectFriend()
+        ) : (
+          <Message userId={this.state.id} friendId={this.state.friendId}>
+            {" "}
+          </Message>
+        )}
       </div>
     );
   }

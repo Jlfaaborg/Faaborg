@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css?family=Aldrich');
+@import "./definitions.scss.";
+
+html, body, #root  {
+   min-height: 100%;
+   width: 100%;
+   display: flex;
+   background-color: $primary_color;
+   margin: 0;
+   text-align: center;
+   align-content: center;
+   font-family: 'Aldrich';
+}
+

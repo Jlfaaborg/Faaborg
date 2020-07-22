@@ -1,0 +1,28 @@
+@import "./definitions.scss.";
+
+
+.LoginPage {
+    height: 100%;
+    width: 75%;
+    margin: 0;
+    background-color: $secondary_color;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.Form {
+    width: 30%;
+    clear: both;
+}
+
+.Form input, .Form button {
+    width: 100%;
+    padding: 5px;
+    clear: both;
+}
+
+.ProfileInfo {
+    display: flex;
+    flex-direction: column;
+}

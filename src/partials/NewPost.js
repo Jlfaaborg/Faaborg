@@ -1,4 +1,5 @@
 import React from "react";
+import "../css/newPost.scss";
 
 const axios = require("axios");
 
@@ -8,7 +9,9 @@ class NewPost extends React.Component {
     this.state = {
       id: props.id,
       value: "",
+      displayName: props.displayName,
     };
+
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -20,15 +23,17 @@ class NewPost extends React.Component {
 
   handleSubmit(event) {
     axios
-      .post("http://localhost:5000/profile", {
+      .post("/profile", {
         id: this.state.id,
         value: this.state.value,
+        displayName: this.state.displayName,
       })
       .then((results) => {
         if (results.data === "ok") {
           this.props.rerenderParentCallback();
         }
       });
+    event.preventDefault();
   }
 
   render() {
@@ -36,7 +41,7 @@ class NewPost extends React.Component {
       <div className="NewPost">
         <form onSubmit={this.handleSubmit}>
           <label>
-            Enter New Posts:
+            Enter New Post:
             <textarea value={this.state.value} onChange={this.handleChange} />
           </label>
           <input type="submit" value="Post" />

@@ -1,0 +1,19 @@
+.NewPost {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+}
+
+.NewPost form {
+    display: flex;
+    flex-direction: column;
+}
+
+.NewPost form label {
+    display: flex;
+    flex-direction: column;
+}
+
+textarea {
+    min-height: 100px;
+}

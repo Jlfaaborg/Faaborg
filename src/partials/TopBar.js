@@ -1,5 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import "../css/topBar.scss";
+
 class TopBar extends React.Component {
   constructor(props) {
     super(props);
@@ -22,6 +24,9 @@ class TopBar extends React.Component {
           </button>
           <button>
             <Link to="/">Profile</Link>
+          </button>
+          <button>
+            <Link to="/friends">Friends</Link>
           </button>
         </nav>
       </div>

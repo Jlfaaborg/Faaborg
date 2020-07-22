@@ -1,0 +1,66 @@
+@import "./definitions.scss.";
+
+ul {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    align-items: center;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.Feed {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.Posts {
+    border: 1px solid black;
+    text-align: center;
+    width: 100%;
+    text-overflow: ellipsis;
+    overflow-wrap: anywhere;
+}
+
+.Posts h3 {
+    display: inline;
+    margin: 5px;
+    
+}
+
+.Comment {
+    display: inline-block;
+    width: 100%;
+}
+
+.Comment h4 {
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+
+}
+
+.Comment h5 {
+    margin: auto;
+
+}
+
+.Comment h4, .Comment h5 {
+    max-width: 50%;
+    text-overflow: ellipsis;
+    overflow-wrap: anywhere;
+}
+
+.LikeComment {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.LikeComment button, .LikeComment textarea {
+    width: 90%;
+}

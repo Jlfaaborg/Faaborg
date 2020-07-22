@@ -2,15 +2,23 @@ import React from "react";
 import ProfilePage from "./ProfilePage";
 import FeedPage from "./FeedPage";
 import MessagePage from "./MessagesPage";
-import NewUserPage from "./partials/NewPost";
+import FriendsPage from "./FriendsPage";
+import Header from "./partials/Header";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import "./css/loginPage.scss";
 
 const axios = require("axios");
 
 class LoginPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { username: "", password: "", isLoggedIn: false, id: 0 };
+    this.state = {
+      username: "",
+      password: "",
+      isLoggedIn: false,
+      id: "",
+      displayName: "",
+    };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -26,15 +34,15 @@ class LoginPage extends React.Component {
     event.preventDefault();
     var username = this.state.username;
     var password = this.state.password;
-    console.log(username);
     axios
-      .post("http://localhost:5000/login", {
+      .post("/login", {
         username: username,
         password: password,
+        displayName: "New User",
       })
       .then((response) => {
-        console.log(response);
         if (response.data === "ok") {
+          return <div>New User</div>;
         }
       });
   }
@@ -44,7 +52,7 @@ class LoginPage extends React.Component {
     var username = this.state.username;
     var password = this.state.password;
     axios
-      .get("http://localhost:5000/login", {
+      .get("/login", {
         params: {
           username: username,
           password: password,
@@ -52,7 +60,11 @@ class LoginPage extends React.Component {
       })
       .then((response) => {
         if (response.data) {
-          this.setState({ id: response.data.id, isLoggedIn: true });
+          this.setState({
+            id: response.data.id,
+            displayName: response.data.displayName,
+            isLoggedIn: true,
+          });
         }
       })
       .catch((err) => console.error(err));
@@ -60,7 +72,7 @@ class LoginPage extends React.Component {
 
   login() {
     return (
-      <div className="LoginPage">
+      <div className="Form">
         <form>
           <label>
             Username:
@@ -93,21 +105,34 @@ class LoginPage extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="LoginPage">
+        <Header />
         {this.state.isLoggedIn ? (
           <Router>
             <Switch>
               <Route exact path="/">
-                <ProfilePage id={this.state.id} />
+                <ProfilePage
+                  id={this.state.id}
+                  displayName={this.state.displayName}
+                />
               </Route>
               <Route path="/feed">
-                <FeedPage id={this.state.id} />
+                <FeedPage
+                  displayName={this.state.displayName}
+                  id={this.state.id}
+                />
               </Route>
               <Route path="/messages">
-                <MessagePage id={this.state.id} />
+                <MessagePage
+                  displayName={this.state.displayName}
+                  id={this.state.id}
+                />
               </Route>
-              <Route path="/newUser">
-                <NewUserPage />
+              <Route path="/friends">
+                <FriendsPage
+                  displayName={this.state.displayName}
+                  id={this.state.id}
+                />
               </Route>
             </Switch>
           </Router>

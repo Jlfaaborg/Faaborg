@@ -1,6 +1,7 @@
 import React from "react";
 import PostFeed from "./partials/PostFeed";
 import TopBar from "./partials/TopBar";
+import "./css/feedPage.scss";
 
 const axios = require("axios");
 
@@ -10,68 +11,101 @@ class FeedPage extends React.Component {
     this.state = {
       allPosts: [],
       user: {
-        id: props.id,
+        _id: props.id,
       },
+      update: false,
     };
+    this.parentCallback = this.parentCallback.bind(this);
+  }
+
+  parentCallback() {
+    this.setState({ update: !this.state.update });
   }
 
   getposts() {
     var posts = this.state.user.posts;
     var friends = this.state.friends;
-    friends.forEach((friend) => {
-      var concat = friend.posts.concat(posts);
-      posts = concat;
-    });
-    posts.sort((a, b) => {
-      return b.created - a.created;
-    });
-    this.setState({ allPosts: posts });
+    if (friends !== undefined) {
+      friends.forEach((friend) => {
+        var concat = friend.posts.concat(posts);
+        posts = concat;
+      });
+      posts.sort((a, b) => {
+        return b.created - a.created;
+      });
+      this.setState({ allPosts: posts });
+    } else {
+      this.setState({ allPosts: posts });
+    }
   }
 
-  componentDidMount() {
+  getProfile() {
+    var user;
+    var allPosts;
     axios
-      .get("http://localhost:5000/profile", {
+      .get("/profile", {
         params: {
-          id: this.state.user.id,
+          id: this.state.user._id,
         },
       })
       .then((response) => {
         if (response.data) {
-          this.setState({
-            user: response.data,
-          });
+          user = response.data;
         }
       })
-      .finally(() => {
-        console.log(this.state.user);
-        var friends = this.state.user.friends;
+      .then(() => {
+        var friends = user.friends;
         var posts = friends.map((friend) => {
           return friend.posts;
         });
         var merge = posts.flat(1);
         axios
-          .get("http://localhost:5000/friendsPost", {
+          .get("/friendsPost", {
             params: {
               ids: merge,
             },
           })
           .then((response) => {
-            if (response.data) {
-              var posts = this.state.user.posts.concat(response.data);
+            if (response.data.status === 500) {
+              this.getProfile();
+            } else if (response.data[0]) {
+              var posts = user.posts.concat(response.data);
+              allPosts = posts;
               this.setState({
-                allPosts: posts,
+                user: user,
+                allPosts: allPosts,
               });
+            } else if (!response.data[0]) {
+              return;
             }
           });
       })
       .catch((err) => console.error(err));
   }
 
+  componentDidMount() {
+    this.getProfile();
+    this.getposts();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.update !== this.state.update) {
+      this.getProfile();
+      this.getposts();
+    }
+  }
+
   render() {
     return (
       <div className="FeedPage">
         <TopBar />
-        <PostFeed posts={this.state.allPosts} />
+        <PostFeed
+          id={this.state.user._id}
+          displayName={this.state.user.displayName}
+          posts={this.state.allPosts}
+          isFeed={true}
+          parentCallback={this.parentCallback}
+        />
       </div>
     );
   }
