@@ -26,7 +26,7 @@ class MessagesPage extends React.Component {
     var displayName;
     var id = event.target.id;
     axios
-      .get("/profile", {
+      .get("/api/profile", {
         params: {
           id: this.state.id,
         },
@@ -39,7 +39,7 @@ class MessagesPage extends React.Component {
       })
       .then(() => {
         axios
-          .post("/replymessages", {
+          .post("/api/replymessages", {
             id: id,
             fromId: fromId,
             displayName: displayName,
@@ -61,7 +61,7 @@ class MessagesPage extends React.Component {
       this.newThread();
     } else {
       axios
-        .get("/messageThread", {
+        .get("/api/messageThread", {
           params: {
             messageId: message._id,
           },
@@ -74,7 +74,7 @@ class MessagesPage extends React.Component {
 
   newThread() {
     axios
-      .post("/newMessage", {
+      .post("/api/newMessage", {
         userId: this.state.id,
         friendId: this.state.friendId,
       })
@@ -98,7 +98,7 @@ class MessagesPage extends React.Component {
 
   getmessageId() {
     axios
-      .get("/messages", {
+      .get("/api/messages", {
         params: {
           id: this.state.id,
           friendId: this.state.friendId,

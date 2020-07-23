@@ -24,7 +24,7 @@ class Friends extends React.Component {
   handleDelete(event) {
     var id = event.target.id;
     axios
-      .delete("/friends", {
+      .delete("/api/friends", {
         data: {
           userId: this.props.id,
           friendId: id,

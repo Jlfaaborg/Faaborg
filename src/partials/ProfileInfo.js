@@ -38,7 +38,7 @@ class ProfileInfo extends React.Component {
 
   getProfile() {
     axios
-      .get("/profile", {
+      .get("/api/profile", {
         params: {
           id: this.state.user._id,
         },

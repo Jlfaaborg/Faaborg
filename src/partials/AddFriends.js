@@ -24,7 +24,7 @@ class AddFriends extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     axios
-      .get("/friendResults", {
+      .get("/api/friendResults", {
         params: { displayName: this.state.value },
       })
       .then((results) => {
@@ -36,7 +36,7 @@ class AddFriends extends React.Component {
     var friendId = event.target.id;
     var userId = this.state.id;
     axios
-      .post("/friends", {
+      .post("/api/friends", {
         userId: userId,
         friendId: friendId,
       })

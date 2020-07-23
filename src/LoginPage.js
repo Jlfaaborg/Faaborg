@@ -35,7 +35,7 @@ class LoginPage extends React.Component {
     var username = this.state.username;
     var password = this.state.password;
     axios
-      .post("/login", {
+      .post("/api/login", {
         username: username,
         password: password,
         displayName: "New User",
@@ -52,7 +52,7 @@ class LoginPage extends React.Component {
     var username = this.state.username;
     var password = this.state.password;
     axios
-      .get("/login", {
+      .get("/api/login", {
         params: {
           username: username,
           password: password,
