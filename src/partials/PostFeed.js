@@ -31,9 +31,8 @@ class PostFeed extends React.Component {
 
   handleDelete(event) {
     var id = event.target.id;
-    console.log(this.state.id);
     axios
-      .delete("/profile", {
+      .delete("/api/profile", {
         data: {
           userId: this.state.id,
           postId: id,
@@ -54,7 +53,7 @@ class PostFeed extends React.Component {
   handleLike(event) {
     var id = event.target.id;
     axios
-      .post("/likes", {
+      .post("/api/likes", {
         userId: this.state.id,
         postId: id,
       })
@@ -69,7 +68,7 @@ class PostFeed extends React.Component {
     var id = event.target.id;
     console.log(this.state.displayName);
     axios
-      .post("/comment", {
+      .post("/api/comment", {
         userId: this.state.id,
         postId: id,
         displayName: this.state.displayName,

@@ -43,7 +43,7 @@ class FeedPage extends React.Component {
     var user;
     var allPosts;
     axios
-      .get("/profile", {
+      .get("/api/profile", {
         params: {
           id: this.state.user._id,
         },
@@ -60,7 +60,7 @@ class FeedPage extends React.Component {
         });
         var merge = posts.flat(1);
         axios
-          .get("/friendsPost", {
+          .get("/api/friendsPost", {
             params: {
               ids: merge,
             },

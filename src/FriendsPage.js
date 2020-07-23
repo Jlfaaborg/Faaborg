@@ -34,7 +34,7 @@ class FriendsPage extends React.Component {
 
   getFriends() {
     axios
-      .get("/friends", {
+      .get("/api/friends", {
         params: {
           id: this.state.id,
         },

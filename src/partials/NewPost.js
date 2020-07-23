@@ -23,7 +23,7 @@ class NewPost extends React.Component {
 
   handleSubmit(event) {
     axios
-      .post("/profile", {
+      .post("/api/profile", {
         id: this.state.id,
         value: this.state.value,
         displayName: this.state.displayName,
